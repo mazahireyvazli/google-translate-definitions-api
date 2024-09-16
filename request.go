@@ -6,14 +6,8 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"regexp"
 	"strings"
 )
-
-func validateTLD(tld string) bool {
-	match, _ := regexp.MatchString(`^[a-zA-Z]{2,63}$`, tld)
-	return match
-}
 
 func escapeSpecialSymbols(inputString string) string {
 	escapedString := strings.ReplaceAll(inputString, `"`, `\\\\"`)
@@ -40,10 +34,6 @@ func generateRequestURL(options *RequestOptions) (string, error) {
 }
 
 func sendRequest(ctx context.Context, text string, options *RequestOptions, httpClient *http.Client) ([]byte, error) {
-	if !validateTLD(options.TLD) {
-		return nil, fmt.Errorf("invalid TLD: Must be 2-63 letters only")
-	}
-
 	body := generateRequestBody(text, options)
 	url, err := generateRequestURL(options)
 	if err != nil {

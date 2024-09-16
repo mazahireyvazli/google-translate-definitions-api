@@ -17,7 +17,7 @@ type RequestOptions struct {
 type GoogleTranslateV2 struct {
 	requestOptions *RequestOptions
 	httpClient     *http.Client
-	parserFn       func([]byte) ([]WordEntry, error)
+	parserFn       func([]byte) ([]Entry, error)
 }
 
 type Option func(*GoogleTranslateV2)
@@ -34,7 +34,7 @@ func WithHttpClient(client *http.Client) Option {
 	}
 }
 
-func WithParserFn(fn func([]byte) ([]WordEntry, error)) Option {
+func WithParserFn(fn func([]byte) ([]Entry, error)) Option {
 	return func(gt *GoogleTranslateV2) {
 		gt.parserFn = fn
 	}
@@ -63,7 +63,7 @@ func New(options ...Option) *GoogleTranslateV2 {
 	return gt
 }
 
-func (s *GoogleTranslateV2) FetchEntries(ctx context.Context, input string) ([]WordEntry, error) {
+func (s *GoogleTranslateV2) FetchEntries(ctx context.Context, input string) ([]Entry, error) {
 	data, err := sendRequest(ctx, input, s.requestOptions, s.httpClient)
 	if err != nil {
 		return nil, err
