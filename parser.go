@@ -136,7 +136,7 @@ func parseRawData(rawData []byte) ([]Entry, error) {
 
 								var definition string
 								var examples []string
-								var synonyms []Synonym
+								var synonyms []DefinitionSynonym
 
 								if definitionStr, ok := definitionElementSlice[0].(string); ok {
 									definition = definitionStr
@@ -165,7 +165,7 @@ func parseRawData(rawData []byte) ([]Entry, error) {
 													for _, synonymStringSliceItem := range synonymStringsSlice {
 														if synonymStringSliceItemObj, ok := synonymStringSliceItem.([]any); ok && len(synonymStringSliceItemObj) > 0 {
 															if synonymString, ok := synonymStringSliceItemObj[0].(string); ok {
-																synonyms = append(synonyms, Synonym{
+																synonyms = append(synonyms, DefinitionSynonym{
 																	Text:         synonymString,
 																	UsageContext: synonymType,
 																})

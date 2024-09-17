@@ -4,17 +4,17 @@ type Phonetic struct {
 	Text string `json:"text"`
 }
 
-type Synonym struct {
+type DefinitionSynonym struct {
 	Text         string `json:"text"`
 	UsageContext string `json:"usageContext"`
 }
 
 type Definition struct {
-	Phonetics    []Phonetic `json:"phonetics"`
-	Definition   string     `json:"definition"`
-	Synonyms     []Synonym  `json:"synonyms"`
-	Examples     []string   `json:"examples"`
-	PartOfSpeech string     `json:"partOfSpeech"`
+	Phonetics    []Phonetic          `json:"phonetics"`
+	Definition   string              `json:"definition"`
+	Synonyms     []DefinitionSynonym `json:"synonyms"`
+	Examples     []string            `json:"examples"`
+	PartOfSpeech string              `json:"partOfSpeech"`
 }
 
 type Translation struct {
@@ -35,5 +35,5 @@ type Entry struct {
 	Definitions          []Definition          `json:"definitions"`
 	Translations         []Translation         `json:"translations"`
 	DetailedTranslations []DetailedTranslation `json:"detailedTranslations"`
-	ExamplesHTML         []string              `json:"examples"`
+	ExamplesHTML         []string              `json:"examplesHTML"`
 }
