@@ -15,27 +15,27 @@ func escapeSpecialSymbols(inputString string) string {
 	return normalizedString
 }
 
-func generateRequestBody(text string, options *RequestOptions) string {
+func generateRequestBody(text string, translationOptions *TranslationOptions, requestOptions *RequestOptions) string {
 	normalizedText := escapeSpecialSymbols(strings.TrimSpace(text))
-	encodedData := url.QueryEscape(fmt.Sprintf(`[[["%s","[[\"%s\",\"%s\",\"%s\",1],[]]",null,"generic"]]]`, options.RPCIDs, normalizedText, options.From, options.To))
+	encodedData := url.QueryEscape(fmt.Sprintf(`[[["%s","[[\"%s\",\"%s\",\"%s\",1],[]]",null,"generic"]]]`, requestOptions.RPCIDs, normalizedText, translationOptions.From, translationOptions.To))
 	return "f.req=" + encodedData + "&"
 }
 
-func generateRequestURL(options *RequestOptions) (string, error) {
+func generateRequestURL(translationOptions *TranslationOptions, requestOptions *RequestOptions) (string, error) {
 	params := url.Values{}
-	params.Add("rpcids", options.RPCIDs)
+	params.Add("rpcids", requestOptions.RPCIDs)
 	params.Add("source-path", "/")
-	params.Add("hl", string(options.HL))
+	params.Add("hl", string(translationOptions.HL))
 	params.Add("soc-app", "1")
 	params.Add("soc-platform", "1")
 	params.Add("soc-device", "1")
 
-	return fmt.Sprintf("https://translate.google.%s/_/TranslateWebserverUi/data/batchexecute?%s", options.TLD, params.Encode()), nil
+	return fmt.Sprintf("https://translate.google.%s/_/TranslateWebserverUi/data/batchexecute?%s", translationOptions.TLD, params.Encode()), nil
 }
 
-func sendRequest(ctx context.Context, text string, options *RequestOptions, httpClient *http.Client) ([]byte, error) {
-	body := generateRequestBody(text, options)
-	url, err := generateRequestURL(options)
+func sendRequest(ctx context.Context, text string, translationOptions *TranslationOptions, requestOptions *RequestOptions, httpClient *http.Client) ([]byte, error) {
+	body := generateRequestBody(text, translationOptions, requestOptions)
+	url, err := generateRequestURL(translationOptions, requestOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func sendRequest(ctx context.Context, text string, options *RequestOptions, http
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	for k, v := range options.Headers {
+	for k, v := range requestOptions.Headers {
 		req.Header.Set(k, v)
 	}
 
